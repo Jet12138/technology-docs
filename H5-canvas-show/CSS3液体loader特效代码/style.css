@@ -1,0 +1,58 @@
+body {
+    display: grid;
+    place-content: center;
+    margin: 0;
+    min-height: 100vh;
+}
+body:before {
+    grid-column: 1;
+    grid-row: 1;
+    background: linear-gradient(90deg, #fde6bd, #a1c5ab, #f4dd51, #d11e48, #632f53);
+    content: "";
+}
+
+.loader {
+    grid-column: 1;
+    grid-row: 1;
+    display: flex;
+    align-items: center;
+    padding: 6em;
+    background: #fff;
+    filter: blur(9px) contrast(18);
+    mix-blend-mode: screen;
+}
+
+.particle {
+    width: 0;
+    padding: 1.5em;
+    border-radius: 50%;
+    background: #000;
+}
+.particle:first-child, .particle:last-child {
+    padding: 0.75em;
+}
+.particle:nth-child(odd) {
+    animation: pulse var(--t) ease-in-out var(--dt) infinite;
+}
+.particle:nth-child(2n) {
+    transform: rotate(0deg) translate(3em);
+    animation: spin var(--t) linear infinite;
+}
+.particle:nth-child(4n) {
+    animation-direction: reverse;
+    animation-duration: calc(1.2*var(--t));
+}
+
+@keyframes pulse {
+    50% {
+        transform: scale(1.8);
+    }
+    70% {
+        transform: scale(0.6);
+    }
+}
+@keyframes spin {
+    to {
+        transform: rotate(1turn) translate(3em);
+    }
+}

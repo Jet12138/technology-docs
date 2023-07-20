@@ -1,0 +1,25 @@
+# Tip! Base your .prettierignore on .gitignore and .eslintignore (if you have one).
+# Ignore artifacts:
+build
+coverage
+
+# 依赖库所在文件夹
+node_modules
+
+# 编译后的代码所在文件夹
+dist
+
+# husky产生git hook功能的命令所在文件夹
+.husky
+
+# Jet Brain编辑器自己的配置文件，不重要，可随时删除
+.idea
+
+# 某些过程中产生的临时文件
+.tmp
+
+# git 版本控制软件所需的配置文件
+.git
+
+# svn 版本控制软件所需的配置文件
+.svn

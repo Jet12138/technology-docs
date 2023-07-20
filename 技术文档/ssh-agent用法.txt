@@ -1,0 +1,32 @@
+# 1. 阮一峰--网道教程
+# https://wangdoc.com/ssh/key.html#ssh-agent-%E5%91%BD%E4%BB%A4ssh-add-%E5%91%BD%E4%BB%A4
+
+$ eval `ssh-agent`
+$ ssh-add my-other-key-file
+
+
+# 2. Github
+# https://docs.github.com/en/authentication/connecting-to-github-with-ssh/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent
+
+# start the ssh-agent in the background
+
+$ eval "$(ssh-agent -s)"
+$ ssh-add ~/.ssh/id_ed25519
+
+# 3. Gitlab
+# http://gitlab.cregcloud.com/help/ssh/README#generate-an-ssh-key-pair
+
+$ eval $(ssh-agent -s)
+$ ssh-add <path to private SSH key>
+
+# 4. 知乎文章
+# https://zhuanlan.zhihu.com/p/126117538
+
+# 先启动，再运行
+# macOS/Linux
+eval `ssh-agent`
+ssh-add ~/.ssh/other_id_rsa
+
+# 在Windows中的git-bash中
+eval $(ssh-agent) 
+ssh-add ~/.ssh/other_id_rsa

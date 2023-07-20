@@ -1,0 +1,9 @@
+build
+coverage
+node_modules
+dist
+.idea
+.tmp
+.git
+.svn
+test

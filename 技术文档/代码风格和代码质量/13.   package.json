@@ -1,0 +1,21 @@
+{
+    "name": "test_for_githooks_pre-commit",
+    "version": "0.0.1",
+    "description": "原理来源：https://cli.vuejs.org/zh/guide/cli-service.html#git-hook",
+    "scripts": {
+        "lint": "eslint src scripts test"
+    },
+    "gitHooks": {
+        "pre-commit": "lint-staged"
+    },
+    "lint-staged": {
+        "*.{js,vue}": [
+            "prettier --write",
+            "eslint --fix"
+        ]
+    },
+    "license": "MIT",
+    "devDependencies": {
+        "lint-staged": "^10.5.4"
+    }
+}
