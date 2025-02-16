@@ -56,3 +56,28 @@ function quickSort(array) {
 
     return quickSort(left).concat([pivot], quickSort(right));
 }
+
+
+function sortzijiexuzuixiao(strs) {
+    let stack = [];
+    let map = new Map();
+    for(let el of strs) {
+        map.set(el, (map.get(el) || 0)+1);
+    }
+
+    for(let el of strs){
+        if(!stack.includes(el)){
+            //如果el不在最终的结果栈里面，则，el还处在要进行比较的阶段
+            while(stack.length>0 && stack[stack.length-1] > el && map.get(stack[stack.length-1])>0){
+                //当该最终结果栈不为空， 且栈顶的元素字节序比当前的el大，所以，栈顶的元素可以弹出，
+                // 然后是依次（while里继续下一轮比较）的比较栈顶和当前元素，如果大于当前元素，就依次弹出。
+                // 当然了，如果栈顶元素的map.get()计数如果是0，说明后面就没有该元素了，按照题目的意思就不必弹出了
+                stack.pop();
+            }
+            stack.push(el);
+        }
+
+        map.set(el, map.get(el)-1);  //当前遍历动作往下一轮之前，把计次减去1
+    }
+
+}
