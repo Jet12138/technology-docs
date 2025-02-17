@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="zh-Hans-CN">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>复习一下worker的用法</title>
+    </head>
+    <body>
+        <div id="chart" style="width: 1000px; height: 600px"></div>
+        <h2>
+            文档地址： https://developer.mozilla.org/zh-CN/docs/Web/API/Web_Workers_API/Using_web_workers#%E5%85%B6%E4%BB%96%E7%B1%BB%E5%9E%8B%E7%9A%84_worker
+        </h2>
+        <h2>
+            MDN上的示例demo： https://developer.mozilla.org/zh-CN/docs/Web/API/Web_Workers_API/Using_web_workers#%E4%B8%93%E7%94%A8_worker:~:text=%E5%A6%82%E5%89%8D%E6%96%87%E6%89%80%E8%BF%B0%EF%BC%8C%E4%B8%80%E4%B8%AA%E4%B8%93%E7%94%A8%20worker%20%E4%BB%85%E8%83%BD%E8%A2%AB%E7%94%9F%E6%88%90%E5%AE%83%E7%9A%84%E8%84%9A%E6%9C%AC%E6%89%80%E4%BD%BF%E7%94%A8%E3%80%82%E8%BF%99%E4%B8%80%E9%83%A8%E5%88%86%E5%B0%86%E6%8E%A2%E8%AE%A8%E4%B8%93%E7%94%A8%20worker%20%E5%9F%BA%E7%A1%80%E7%A4%BA%E4%BE%8B%EF%BC%88%E8%BF%90%E8%A1%8C%E4%B8%93%E7%94%A8%20worker%EF%BC%89%E4%B8%AD%E7%9A%84%20JavaScript%20%E4%BB%A3%E7%A0%81
+        </h2>
+
+        <h3>在 worker 内，不能直接操作 DOM 节点，也不能使用 window 对象的默认方法和属性。
+            但是你可以使用大量 window 对象之下的东西，包括 WebSockets，以及 IndexedDB 等数据存储机制。
+
+            Worker 的全局对象WorkerGlobalScope，不同于网页的全局对象Window，很多接口拿不到。
+
+            Worker 线程所在的全局对象，与主线程不一样，无法读取主线程所在网页的 DOM 对象，也无法使用document、window、parent这些对象。
+            但是，Worker 线程可以使用navigator对象和location对象。
+        </h3>
+
+        <h3>在专用 worker 的情况下，DedicatedWorkerGlobalScope 对象代表了 worker 的上下文（专用 worker 是指标准 worker 仅在单一脚本中被使用；
+            共享 worker 的上下文是 SharedWorkerGlobalScope 对象）。
+            一个专用 worker 仅能被首次生成它的脚本使用，而共享 worker 可以同时被多个脚本使用。
+        </h3>
+
+        <h3>
+            文档地址： https://developer.mozilla.org/zh-CN/docs/Web/API/Web_Workers_API/Using_web_workers#%E5%85%B6%E4%BB%96%E7%B1%BB%E5%9E%8B%E7%9A%84_worker
+            
+            备注： 在主线程中使用时，onmessage 和 postMessage() 必须挂在 worker 对象上，而在 worker 中使用时不用这样做。原因是，在 worker 内部，worker 是有效的全局作用域。
+            备注： 当一个消息在主线程和 worker 之间传递时，它被复制或者转移了，而不是共享。请参阅worker 中数据的接收与发送：详细介绍 获取更详尽的解释。
+        </h3>
+
+        <h3>
+            阮一峰的wangdoc.com上（https://wangdoc.com/javascript/bom/webworker）说：
+            Worker 线程一旦新建成功，就会始终运行，不会被主线程上的活动（比如用户点击按钮、提交表单）打断。这样有利于随时响应主线程的通信。
+            但是，这也造成了 Worker 比较耗费资源，不应该过度使用，而且一旦使用完毕，就应该关闭。
+        </h3>
+
+        <script>
+            if(typeof(Worker) !== 'undefined'){
+                //do something
+                let worker = new Worker('./worker1.js');
+                worker.postMessage('Hello World');
+                
+                worker.onmessage = function (event) {
+                    console.log('Received message ' + event.data);
+                    doSomething();
+                }
+
+                function doSomething() {
+                    // 执行任务
+                    worker.postMessage('Work done!');
+                }
+            }else{
+                alert('您的浏览器不支持Web Worker');
+            }
+        </script>
+    </body>
+</html>

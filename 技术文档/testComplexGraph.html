@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="zh-Hans-CN">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>左岸和右岸图---KLSK激光准直分布图</title>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/echarts/5.6.0/echarts.min.js"></script>
+    </head>
+    <body>
+        <div id="chart" style="width: 1000px; height: 600px"></div>
+        <script>
+            // 初始化 ECharts 实例
+            let myChart = echarts.init(document.getElementById('chart'));
+
+            const rectangles = [
+                { x: 100, y: 90, width: 10, height: 10, color: '#ff0000' },
+                { x: 200, y: 90, width: 10, height: 10, color: '#ff0000' },
+                { x: 300, y: 90, width: 10, height: 10, color: '#ff0000' },
+                { x: 400, y: 90, width: 10, height: 10, color: '#ff0000' },
+                { x: 700, y: 90, width: 10, height: 10, color: '#ff0000' },
+                { x: 750, y: 90, width: 10, height: 10, color: '#ff0000' },
+                { x: 800, y: 90, width: 10, height: 10, color: '#ff0000' },
+            ];
+            const point = [
+                [100, 200, '发射墙'], // 第一个顶点
+                [200, 200, 'LA1-1'], // 第二个顶点
+                [300, 150, 'LA1-2'], // 第三个顶点
+                [400, 300, 'LA1-3'], // 第四个顶点
+                [700, 150, 'LA1-4'], // 第三个顶点
+                [750, 300, 'LA1-5'], // 第四个顶点
+                [800, 300, '接收墙'], // 第四个顶点
+            ];
+            //竖向线条
+            const lineangles = point.map((ponit) => {
+                return {
+                    x: ponit[0],
+                    y: 100,
+                    x1: ponit[0],
+                    y1: ponit[1],
+                    color: '#ff0000',
+                };
+            });
+            //文字LA1-1
+            const texts = point.map((ponit) => {
+                return {
+                    x: ponit[0] - 15,
+                    y: 100 - 16 - 10,
+                    content: ponit[2],
+                    color: '#ff0000',
+                    fontSize: 14,
+                    fontWeight: 'normal',
+                    fontFamily: 'Arial',
+                };
+            });
+            //文字0.66
+            const texts1 = point.map((ponit) => {
+                return {
+                    x: ponit[0] - 15,
+                    y: ponit[1] + 10,
+                    content: ponit[1],
+                    color: '#ff0000',
+                    fontSize: 14,
+                    fontWeight: 'normal',
+                    fontFamily: 'Arial',
+                };
+            });
+            texts.push(
+                {
+                    x: 60,
+                    y: 100,
+                    content: '左岸',
+                    color: '#ff0000',
+                    fontSize: 14,
+                    fontWeight: 'normal',
+                    fontFamily: 'Arial',
+                },
+                {
+                    x: 830,
+                    y: 100,
+                    content: '右岸',
+                    color: '#ff0000',
+                    fontSize: 14,
+                    fontWeight: 'normal',
+                    fontFamily: 'Arial',
+                },
+                ...texts1
+            );
+
+            //上边竖线宽度标记
+            const point1 = [20, 50, 100, 90, 50, 70, 50, 50, 50, 50, 50, 100];
+            let sum = 70;
+            //累加 获得x的位置
+            const cumulativeSumArray = point1.map((val) => {
+                sum += val;
+                return sum;
+            });
+
+            const topLine = cumulativeSumArray.map((ponit) => {
+                return { x: ponit, y: 40, x1: ponit, y1: 60, color: '#ff0000' };
+            });
+
+            const topText = [];
+            //竖线内的文字
+            for (let i = 1; i < topLine.length; i++) {
+                topText.push({
+                    x: topLine[i - 1].x + point1[i] / 2,
+                    y: 45,
+                    content: '22#',
+                });
+            }
+            console.log('topLine', topLine, topText);
+
+            //张晗编写的这个配置，使用这个进行分布图的绘制。
+            let option = {
+                graphic: {
+                    elements: [
+                        // 作为基准的水平横线
+                        {
+                            type: 'line',
+                            shape: {
+                                x1: 100, // 起点的 x 坐标
+                                y1: 100, // 起点的 y 坐标
+                                x2: 800, // 终点的 x 坐标
+                                y2: 100, // 终点的 y 坐标
+                            },
+                            style: {
+                                stroke: '#ff0000', // 线条颜色
+                                lineWidth: 2, // 线条宽度
+                                lineCap: 'round', // 线条端点形状，可选 'butt'、'round' 或 'square'
+                            },
+                        },
+                        //折线
+                        {
+                            type: 'polyline', // 使用 polyline 类型
+                            shape: {
+                                points: [
+                                    // 定义折线的顶点坐标
+                                    [100, 200], // 第一个顶点
+                                    [200, 200], // 第二个顶点
+                                    [300, 150], // 第三个顶点
+                                    [400, 300], // 第四个顶点
+                                    [700, 150], // 第三个顶点
+                                    [750, 300], // 第四个顶点
+                                    [800, 300], // 第四个顶点
+                                ],
+                            },
+                            style: {
+                                stroke: '#ff0000', // 线条颜色
+                                lineWidth: 2, // 线条宽度
+                                lineCap: 'round', // 线条端点形状
+                                lineJoin: 'round', // 线条连接点的形状
+                            },
+                        },
+                        // 矩形
+                        ...rectangles.map((rect) => ({
+                            type: 'rect',
+                            shape: {
+                                x: rect.x - 5,
+                                y: rect.y,
+                                width: rect.width,
+                                height: rect.height,
+                            },
+                            style: {
+                                fill: null,
+                                stroke: '#000000',
+                                lineWidth: 1,
+                            },
+                        })),
+                        //竖向线条
+                        ...lineangles.map((line) => ({
+                            type: 'line',
+                            shape: {
+                                x1: line.x, // 起点的 x 坐标
+                                y1: line.y, // 起点的 y 坐标
+                                x2: line.x1, // 终点的 x 坐标
+                                y2: line.y1, // 终点的 y 坐标
+                            },
+                            style: {
+                                fill: null,
+                                stroke: '#000000',
+                                lineWidth: 1,
+                            },
+                        })),
+                        // 文字
+                        ...texts.map((text) => ({
+                            type: 'text',
+                            style: {
+                                text: text.content, // 文字内容
+                                x: text.x, // 文字的 x 坐标
+                                y: text.y, // 文字的 y 坐标
+                                fill: '000000', // 文字颜色
+                                fontSize: text.fontSize, // 字体大小
+                                fontWeight: text.fontWeight, // 字体粗细
+                                fontFamily: text.fontFamily, // 字体类型
+                            },
+                        })),
+                        //竖向线条
+                        ...topLine.map((text) => ({
+                            type: 'line',
+                            shape: {
+                                x1: text.x, // 起点的 x 坐标
+                                y1: text.y, // 起点的 y 坐标
+                                x2: text.x1, // 终点的 x 坐标
+                                y2: text.y1, // 终点的 y 坐标
+                            },
+                            style: {
+                                stroke: '#ff0000', // 线条颜色
+                                lineWidth: 2, // 线条宽度
+                                lineCap: 'round', // 线条端点形状，可选 'butt'、'round' 或 'square'
+                            },
+                        })),
+                        // 竖向文字
+                        ...topText.map((text) => ({
+                            type: 'text',
+                            style: {
+                                text: text.content, // 文字内容
+                                x: text.x, // 文字的 x 坐标
+                                y: text.y, // 文字的 y 坐标
+                                fill: '000000', // 文字颜色
+                                fontSize: 14, // 字体大小
+                                fontFamily: 'Arial', // 字体类型
+                                textAlign: 'center', // 文字水平居中
+                                textBaseline: 'middle', // 文字垂直居中
+                            },
+                        })),
+                    ],
+                },
+            };
+
+            // 我做的配置项和数据，未使用
+            let option2 = {
+                grid: {
+                    left: '30',
+                    right: '30',
+                    bottom: '30',
+                },
+                xAxis: {
+                    name: 'Length (100)',
+                    min: 0,
+                    max: 10,
+                    axisLine: {
+                        lineStyle: {
+                            type: 'dashed',
+                            color: 'rgba(0, 0, 0, 0.1)',
+                        },
+                    },
+                    axisLabel: {
+                        show: true,
+                        color: 'rgba(0, 0, 0, 1)',
+                    },
+                    splitLine: {
+                        show: true,
+                        lineStyle: {
+                            color: 'rgba(0, 0, 0, 1)',
+                        },
+                    },
+                },
+                yAxis: {
+                    name: 'Width (20)',
+                    min: 0,
+                    max: 20,
+                    axisLabel: { show: true },
+                    splitLine: { show: false },
+                },
+                //graphic 是原生图形元素组件
+                graphic: [
+                    {
+                        type: 'rect',
+                        shape: {
+                            x: 0, // 矩形起点 x 坐标
+                            y: 0, // 矩形起点 y 坐标
+                            width: 1, // 长度
+                            height: 20, // 宽度
+                        },
+                        style: {
+                            // fill: 'rgba(84, 112, 198, 0.6)',  // 填充颜色
+                            stroke: '#5470C6', // 边框颜色
+                        },
+                    },
+                    {
+                        type: 'rect',
+                        shape: {
+                            x: 20, // 矩形起点 x 坐标
+                            y: 0, // 矩形起点 y 坐标
+                            width: 1, // 长度
+                            height: 20, // 宽度
+                        },
+                        style: {
+                            // fill: 'rgba(84, 112, 198, 0.6)',  // 填充颜色
+                            stroke: '#5470C6', // 边框颜色
+                        },
+                    },
+                    {
+                        type: 'rect',
+                        shape: {
+                            x: 40, // 矩形起点 x 坐标
+                            y: 0, // 矩形起点 y 坐标
+                            width: 1, // 长度
+                            height: 20, // 宽度
+                        },
+                        style: {
+                            // fill: 'rgba(84, 112, 198, 0.6)',  // 填充颜色
+                            stroke: '#5470C6', // 边框颜色
+                        },
+                    },
+
+                    // 标注长、宽和面积
+                    {
+                        type: 'text',
+                        left: 'center',
+                        top: 'middle',
+                        style: {
+                            text: 'Area = 200',
+                            fontSize: 20,
+                            fill: '#333',
+                        },
+                    },
+                    {
+                        type: 'text',
+                        left: -30, // 长标注位置
+                        top: 20,
+                        style: {
+                            text: 'Length: 10',
+                            fill: '#666',
+                        },
+                    },
+                    {
+                        type: 'text',
+                        left: -30,
+                        top: 10,
+                        rotation: 90,
+                        style: {
+                            text: 'Width: 20',
+                            fill: '#666',
+                        },
+                    },
+                ],
+            };
+
+            // 显示图表
+            myChart.setOption(option);
+        </script>
+    </body>
+</html>
