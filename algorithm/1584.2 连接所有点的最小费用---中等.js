@@ -36,7 +36,7 @@ var minCostConnectPoints = function(points) {
         let minIdx = -1;
         let minVal = Infinity;
         for(let j = 0; j<n; j++ ){
-            if(v[j] === 0) continue; //说明已经加入了 Vnew不用遍历该点了。
+            if(v[j] === 0) continue; //说明已经加入了 Vnew， 不用遍历该点了。
             if(lowcost[j]<minVal){
                 minIdx = j;
                 minVal = lowcost[j];
