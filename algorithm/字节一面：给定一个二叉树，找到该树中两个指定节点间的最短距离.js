@@ -1,6 +1,7 @@
 // 由于无法给出一致的p, q 节点，
 // 只用new TreeNode(p, null, null) 和 new TreeNode(7, null, null)是计算不出来的。
 // 无奈摊手，只学习算法思路吧。
+// https://github.com/sisterAn/JavaScript-Algorithms/issues/82
 
 // 先构造一棵二叉树，
 // 数据和算法来源：
@@ -51,7 +52,7 @@ let ancestor = lowestCommonAncestor(
 );
 
 //步骤2.
-const getPath = function (root, p, paths, hasFound = false) {
+const getPath = function (root, p, paths) {
   if (root === null) return;
   //找到节点返回true
   if (root === p) {
@@ -59,7 +60,7 @@ const getPath = function (root, p, paths, hasFound = false) {
     return;
   }
   paths.push(root);
-
+  let hasFound = false;
   if (!hasFound && root.left !== null) {
     hasFound = getPath(root.left, p, paths);
   }
@@ -80,7 +81,7 @@ let pDis = [],
 // getPath(ancestor, new TreeNode(7, null, null), qDis);
 
 getPath(ancestor, ancestor.left, pDis);
-getPath(ancestor, ancestor.right.right, qDis);
+getPath(ancestor, ancestor.right, qDis);
 
 // const shortestDistance = function(treeroot, p, q) {
 //     // 最近公共祖先
@@ -98,27 +99,27 @@ console.log(pDis, qDis);
 console.log(pDis.length + qDis.length);
 
 // 第二种写法：
-function ancestor(root, p, q) {
-  if (root === null || root === p || root === q) return root;
-  let left = ancestor(root.left, p, q);
-  let right = ancestor(root.right, p, q);
-  if (left === null) return right;
-  if (right === null) return left;
-  if (left && right) return root;
-}
-
-function minDist(root, p, q) {
-  let common = ancestor(root, p, q);
-  if (!common) return Infinity;
-  let res = [];
-  let depth = function (root, sum) {
-    if (root === null || res.length === 2) return;
-    if (root === p || root === q) {
-      res.push(sum);
-    }
-    depth(root.left, 1 + sum);
-    depth(root.right, 1 + sum);
-  };
-  depth(common, 0);
-  return res.reduce((pre, curr) => pre + curr);
+function fn(root,node1,node2) {
+  let res = 0
+  const getParent = (root, node1, node2) => {
+    if (!root || root === node1 || root === node2) return root
+    const left = getParent(root.left, node1, node2)
+    const right = getParent(root.right, node1, node2)
+    if (!left) return right
+    if (!right) return left
+    return root
+  }
+  const getDis = (parent, child) => {
+    if(!parent) return -1
+    if (parent === child) return 0 
+    const left = getDis(parent.left, child)
+    const right = getDis(parent.right,child)
+    
+    if (left !== -1) return left+1
+    if ( right!== -1) return right+1
+    return -1
+  }
+  res = getDis(root, node1)
+  res = getDis(root, node2)
+  return res
 }
