@@ -23,7 +23,7 @@ var minCostConnectPoints = function(points) {
     // 记录V[i]是否加入到了Vnew
     let v = new Array(n).fill(-1);
 
-    // 2. 先将start[: 0]加入到Vnew
+    // 2. 先将start[: 0]加入到Vnew， 并更新lowcost数组。只要一有节点变动加入Vnew，就更新lowcost
     v[0] = 0;
     for(let i = 0; i< n; i++){
         if(i=== 0) continue;
